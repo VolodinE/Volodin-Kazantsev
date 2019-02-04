@@ -1,4 +1,4 @@
-from head import primary_key
+from XDB_to_RAM.head import primary_key
 from XDB_to_RAM.exceptions import Exceptions
 
 class settings():
