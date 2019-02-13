@@ -1,16 +1,18 @@
-from XDB_to_RAM.head import primary_key
+from head import primary_key
 from XDB_to_RAM.exceptions import Exceptions
 
 class fields():
     id = 0
     primary_key = primary_key("id")
-
     def __init__(self, domain_id, table_id, position, name, russian_short_name, uuid, id=None, description=None,
                  can_input=None, can_edit=None, show_in_grid=None, show_in_detailes=None, is_mean=None,
                  autocalculated=None, required=None):
-
         try:
-            if id is None:
+            Exceptions.null_exception_throw("id","domain_id","table_id","position","name","russian_short_name",
+                                            "uuid")
+            #Exceptions.not_unique_exception_throw("id","domain_id","table_id","position","name","russian_short_name",
+            #                                "uuid")
+            """if id is None:
                 raise Exceptions.IsNull("id")
             if domain_id is None:
                 raise Exceptions.IsNull("domain_id")
@@ -28,13 +30,15 @@ class fields():
                 raise Exceptions.IsNull("russian_short_name")
             if uuid is None:
                 raise Exceptions.IsNull("uuid")
+            """
+
         except Exceptions.IsNull as error:
+            error.message()
+        except Exceptions.IsNotUnique as error:
             error.message()
 
         self.id = id
-
         self.description = description
-
         self.can_input = can_input
         self.can_edit = can_edit
         self.show_in_grid = show_in_grid
