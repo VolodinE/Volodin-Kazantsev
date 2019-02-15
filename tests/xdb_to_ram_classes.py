@@ -37,8 +37,8 @@ class schema:
 
     def __init__(self,xdb_file):
         self.xdb_file = parse(xdb_file)
-        self.domains = frozenset(self.get_domains())
-        self.fields = frozenset(self.get_fields())
+        self.domains = self.get_domains()
+        self.fields = self.get_fields()
 
     def __eq__(self, other):
         if (self.domains == other.domains
@@ -51,14 +51,16 @@ class schema:
         domains_set = set()
         domains = self.xdb_file.getElementsByTagName("domain")
         for domain_description in domains:
-            domains_set.add(domain(domain_description.attributes.items()))
+            if domain(domain_description.attributes.items()) not in domains_set:
+                domains_set.add(domain(domain_description.attributes.items()))
         return domains_set
 
     def get_fields(self):
         fields_set = set()
         fields = self.xdb_file.getElementsByTagName("field")
         for field_description in fields:
-            fields_set.add(field(field_description.attributes.items()))
+            if field(field_description.attributes.items()) not in fields_set:
+                fields_set.add(field(field_description.attributes.items()))
         return fields_set
 
 class domain:
@@ -76,11 +78,8 @@ class domain:
         return hash(tuple(self.description,))
 
     def __eq__(self, other):
-      #  is_Equal = True
-#        if (set.difference(self.description,other.description)):
         if self.description==other.description:
             return True
-                #прописать исключение для равенства значений и неравенства ключей
         return False
 
 class field:
