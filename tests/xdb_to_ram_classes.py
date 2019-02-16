@@ -39,10 +39,13 @@ class schema:
         self.xdb_file = parse(xdb_file)
         self.domains = self.get_domains()
         self.fields = self.get_fields()
+        self.tables = self.get_tables()
 
     def __eq__(self, other):
         if (self.domains == other.domains
-            and self.fields == other.fields):
+            and self.fields == other.fields
+            and self.tables == other.tables
+            ):
             return True
         else:
             return False
@@ -58,10 +61,30 @@ class schema:
     def get_fields(self):
         fields_set = set()
         fields = self.xdb_file.getElementsByTagName("field")
+
+#        print(fields)
+
         for field_description in fields:
             if field(field_description.attributes.items()) not in fields_set:
                 fields_set.add(field(field_description.attributes.items()))
         return fields_set
+
+    def get_tables(self):
+        tables_set = set()
+        tables = self.xdb_file.getElementsByTagName("table")
+
+        print(tables)
+
+        for table_description in tables:
+            if table(table_description.attributes.items()) not in tables_set:
+                tables_set.add(table(table_description.attributes.items()))
+#            tables_set.add(table(table_description.attributes.items()))
+
+
+          #  print(table_description.attributes.items())
+
+
+        return tables_set
 
 class domain:
     def __init__(self,items):
@@ -70,6 +93,7 @@ class domain:
         for item in items:
             self.description[item[0]]=item[1]
         self.description = self.description
+
     def description(self):
         return self.description
 
@@ -102,6 +126,21 @@ class field:
     def print_field(self):
         print(self.description)
 
+class table:
+    def __init__(self,items):
+        self.pk = primare_key("table")
+        self.description = dict()
+        for item in items:
+            self.description[item[0]]=item[1]
+
+        def __hash__(self):
+            return hash(self.description)
+
+        def __eq__(self, other):
+            if (self.description == other.description):
+                return True
+            else:
+                return False
 
 schema1 = schema("tasks.xdb")
 schema2 = schema("tasks.xdb")
@@ -109,4 +148,22 @@ schema2 = schema("tasks.xdb")
 #print(schema1.print_fields())
 
 print(schema1==schema2)
+for i in schema1.tables:
+   if i.description["name"]=="ACCOUNT":
+     print(i.description)
+     print(i.pk)
 
+
+for i in schema2.tables:
+   if i.description["name"]=="ACCOUNT":
+     print(i.description)
+     print(i.pk)
+
+print(len(schema1.fields))
+print(len(schema2.fields))
+
+
+print()
+
+#print(schema1.tables - schema2.tables)
+#print(len(set.union(schema1.tables,schema2.tables)))
