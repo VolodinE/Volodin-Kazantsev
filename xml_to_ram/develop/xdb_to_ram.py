@@ -1,8 +1,8 @@
-# sceme create domains
-
 from collections import defaultdict
 #from collections import
-
+import xml.etree.ElementTree as ET
+from xml.dom.minidom import parse
+from xml_to_ram.develop.classes_of_schema_in_ram import *
 attribute = 0
 value = 1
 
@@ -36,7 +36,6 @@ class set_for_tables(set):                      #класс определен �
             return True
         return False
 
-
 class primare_key:
     types = set_for_tables()                              #множество всех типов в таблице
     num_of_string_of_type = defaultdict(int)              #словарь количества ключей для каждого типа, все значения
@@ -63,26 +62,62 @@ class primare_key:
         primare_key.types.clear()                         #очистка множества всех типов в схеме
         primare_key.num_of_string_of_type.clear()         #очистка словаря соответсвий тип:количество эл-ов типа
 
-from xml.dom.minidom import parse
+
 class schema:
 
     def __init__(self,xdb_file):
-        self.xdb_file = parse(xdb_file)         #парсинг файла
+        self.xdb_file = ET.parse(xdb_file)         #парсинг файла
 
         primare_key.set_default()               #сброс всей информации о ключах в схеме (всех, если до этого уже созд-сь)
 
-        self.domains = self.get_domains()       #получение данных схемы
-        self.fields = self.get_fields()
-        self.tables = self.get_tables()
+        root = self.xdb_file.getroot()
+        if (root.tag=="dbd_schema"):
+            self.schema_despription = root.attrib
+        # else exception
+        not_allowed = set()
+        not_allowed.add("dbd_schema")
+
+        self.set_of_domains = set()
+        self.set_of_tables = set_for_tables()
+        self.set_of_constraints = set()
+        self.set_of_indexes = set()
+
+        l = list()
+        for i in root:
+            if (i.tag == "domains"):
+                for domain_ in i:
+                    self.set_of_domains.add((domain((domain_.attrib))))
+            if(i.tag == "tables"):
+                table_id = 0
+                for table_ in i:
+                    print(table_.attrib)
+                    self.set_of_tables.add(table(table_.attrib))
+
+        # for i in l:
+        #     print(i.description)
+        # for i in root[2]:
+        #     print(i.attrib)
+        #
+        # for table in tables:
+        #     for element in table:
+        #         if(element.tag == "field"):
+        #             set_of_fields.add(field(element.attrib,table_id))
+
 
     def __eq__(self, other):
-        if (    self.domains == other.domains   #если все множества значений равны - схемы однаковы
-            and self.fields == other.fields
-            and self.tables == other.tables
-            ):
+        # if (    self.domains == other.domains   #если все множества значений равны - схемы однаковы
+        #     and self.fields == other.fields
+        #     and self.tables == other.tables
+        #     ):
+        #     return True
+        # else:
+        #     return False
+        if (
+            self.set_of_domains==other.set_of_domains
+            and self.set_of_tables == other.set_of_tables
+        ):
             return True
-        else:
-            return False
+        return False
 
     def get_domains(self):
         # получение значений типов доменов
@@ -114,79 +149,25 @@ class schema:
         # затем пополняем список таблиц значениями из схемы, если их там нет,
         # т.к. множество содержит один уникальный элемент
         # то переносим в множество, этим убирая повторяющиеся элементы
-        tables_ = self.xdb_file.getElementsByTagName("table")
+        #
+        # tables_ = self.xdb_file.getElementsByTagName("table")
+        #
+        # set_of_tables = set_for_tables()
+        # for_items = set_for_tables()
+        # for table_description in tables_:
+        #     for_items.add(tuple(table_description.attributes.items()))
+        #
+        # for table_description in for_items:
+        #     if (table(table_description)) not in set_of_tables:
+        #         set_of_tables.add((table(table_description)))
 
-        set_of_tables = set_for_tables()
-        for_items = set_for_tables()
-        for table_description in tables_:
-            for_items.add(tuple(table_description.attributes.items()))
+        # tables_set = set_of_tables
+        # return tables_set
 
-        for table_description in for_items:
-            if (table(table_description)) not in set_of_tables:
-                set_of_tables.add((table(table_description)))
+        schema_ = (self.xdb_file)
+        root = schema_.getroot()
+        print(root.tag,root.attrib)
 
-        tables_set = set_for_tables(set_of_tables)
-        return tables_set
-
-class domain:
-    def __init__(self,items):
-        self.primary_key = primare_key("domain")
-        self.description = dict()
-        for item in items:
-            self.description[item[0]]=item[1]
-        self.description = self.description
-
-    def description(self):
-        return self.description
-
-
-    def __hash__(self):
-        return hash(tuple(self.description,))
-
-    def __eq__(self, other):
-        if self.description==other.description:
-            return True
-        return False
-
-class field:
-    def __init__(self,items):
-        self.pk = primare_key("field")
-        self.description = dict()
-        for item in items:
-            self.description[item[0]]=item[1:]
-
-    def __hash__(self):
-        return hash(tuple(self.description,))
-
-    def __eq__(self, other):
-        if (#self.table_id == other.table_id
-            self.description == other.description):
-            return True
-        else:
-            return False
-
-    # def print_field(self):
-    #     print(self.description)
-
-class table:
-    def __init__(self,items):
-        self.pk = primare_key("table")
-        self.description = (tuple(dict(items)))
-
-        def __hash__(self):
-            return hash(self.description,)
-        
-        def __eq__(self, other):
-            input()
-            if (
-                self.description == other.description
-                ):
-                return True
-            else:
-                return False
-
-    def description(self):
-        return self.description
 
 
 schema1 = schema("tasks1.xdb")
