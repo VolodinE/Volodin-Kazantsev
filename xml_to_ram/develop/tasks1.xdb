@@ -210,9 +210,6 @@
     <domain name="Объекты" type="BOOLEAN" align="L" width="3"/>
     <domain name="ОбъемЧасов" type="BYTE" align="L" width="3"/>
     <domain name="Ограничен." type="BOOLEAN" align="L" width="3"/>
-    <domain name="Объекты" type="BOOLEAN" align="L" width="3"/>
-    <domain name="ОбъемЧасов" type="BYTE" align="L" width="3"/>
-    <domain name="Ограничен." type="BOOLEAN" align="L" width="3"/>
     <domain name="ОкончЛицен" description="Срок окончания лицензии" type="DATE" align="L" width="10"/>
     <domain name="Описание" type="STRING" align="L" width="240" char_length="240"/>
     <domain name="ОрганФМС" type="STRING" align="L" width="155" char_length="155"/>
@@ -277,22 +274,6 @@
     <domain name="ХешПароль" type="STRING" align="L" width="40" props="case_sensitive" char_length="40"/>
   </domains>
   <tables>
-    <table name="ACCOUNT" description="Счета" props="add, edit" ht_table_flags="rws" access_level="0">
-      <field name="id_ACC" rname="id_ACC" domain="id_ACC" props="autocalculated"/>
-      <field name="KodDogovor" rname="КодДоговор" domain="КодДоговор" props="input, edit, show_in_details"/>
-      <field name="N_scheta" rname="N счета" domain="N счета" props="input, edit, show_in_grid, show_in_details, required"/>
-      <field name="DataScheta" rname="ДатаСчета" domain="Дата" props="input, edit, show_in_grid, show_in_details, required"/>
-      <field name="Summa" rname="Сумма" domain="Сумма" props="input, edit, show_in_grid, show_in_details"/>
-      <field name="DataOplaty" rname="ДатаОплаты" domain="ДатаОплаты" props="input, edit, show_in_details"/>
-      <field name="Primechanie" rname="Примечание" domain="Примечание" props="input, edit, show_in_details"/>
-      <constraint kind="PRIMARY" items="id_ACC"/>
-      <constraint kind="FOREIGN" items="KodDogovor" reference="CONTRACT" props="has_value_edit, cascading_delete"/>
-      <index field="DataOplaty"/>
-      <index field="DataScheta"/>
-      <index field="KodDogovor"/>
-      <index field="N_scheta"/>
-      <index field="Summa"/>
-    </table>
     <table name="ACCOUNT" description="Счета" props="add, edit" ht_table_flags="rws" access_level="0">
       <field name="id_ACC" rname="id_ACC" domain="id_ACC" props="autocalculated"/>
       <field name="KodDogovor" rname="КодДоговор" domain="КодДоговор" props="input, edit, show_in_details"/>

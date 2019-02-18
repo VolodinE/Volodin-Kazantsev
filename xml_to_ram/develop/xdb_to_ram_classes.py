@@ -1,2 +1,0 @@
-# sceme create domains
-
