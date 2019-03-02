@@ -1,2 +1,40 @@
-# Volodin-Kazantsev
-Collective work for course-20180908
+
+#Коллективная разработка приложений
+
+### main
+
+
+Основной функционал расположен в файлах main_tasks.py, main_prjadm.py и main_mssql.py.  
+
+Файл main_tasks.py: преобразовывает XDB -> RAM -> DBD -> RAM - > XDB2  для файла tasks.xdb
+
+Файл main_prjadm.py: преобразовывает XDB -> RAM -> DBD -> RAM - > XDB2 для файла prjadm.xdb
+
+Файл main_mssql.py запускает процессы:
+Преобразовывает RAM -> XDB и RAM -> DDL с выводом в консоль ram-представления.
+Переносит данные из исходной в целевую БД.
+
+
+В папке modules расположены модули преобразования:  
+
+xdb_ram - модуль преобразования xml таблиц из xdb файлов в ram-представление.  
+ram_xdb - модуль преобразования ram представления в xml таблицы в xdb файл.  
+ram_dbd - модуль преобразования ram представления в sql таблицы в db файл.  
+dbd_ram - модуль преобразования sql таблиц из db файла в ram представление.  
+mssql_ram - модуль генерации описателя по исходной демонстрационной БД в RAM представлении.  
+mssql_postgres - модуль переноса данных из исходной в целевую БД.
+postgres_ddl_generator - модуль генерации DDL целевой БД PostgreSQL.
+
+Исходные файлы (tasks.xdb и prjadm.xdb) расположены в папке materials.
+
+Модуль sql_requests содержит sql-запросы и расположен в папке additions.  
+Модуль ms_sql_requests содержит sql-запросы и расположен в папке additions.  
+Модуль data_types_converting содержит сопоставление типов данных исходной и целевой БД PostgreSQL и расположен в папке additions.  
+
+### Модуль psycopg2
+
+Для работы с реляционной базой данных PostgreSQL.
+
+### Модуль pyodbc
+
+Для работы с реляционной базой данных MSSQL.
